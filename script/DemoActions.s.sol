@@ -8,7 +8,7 @@ import {ACMNToken} from "src/ACMNToken.sol";
  * @title DemoActions
  * @notice A friendly script that demonstrates common actions for workshops/demos:
  *         set a community wallet, reward a learner, tip someone, donate, and
- *         freeze/unfreeze transfers.
+ *         pause/unpause transfers.
  *
  * Required env vars:
  * - PRIVATE_KEY: admin/minter/pauser key (typically the deployer)
@@ -64,11 +64,11 @@ contract DemoActions is Script {
         token.donate(1e18);
         console.log("Donated 1 token to community wallet");
 
-        // 6) Freeze and unfreeze transfers (pauser-only)
-        token.freezeTransfers();
-        console.log("Transfers frozen");
-        token.unfreezeTransfers();
-        console.log("Transfers unfrozen");
+        // 6) Pause and unpause transfers (pauser-only)
+        token.pause();
+        console.log("Transfers paused");
+        token.unpause();
+        console.log("Transfers unpaused");
 
         vm.stopBroadcast();
 

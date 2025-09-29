@@ -65,7 +65,7 @@ forge script script/DemoActions.s.sol:DemoActions \
   --broadcast
 ```
 
-This will set a community wallet, reward a learner, tip them, donate, and briefly freeze/unfreeze transfers.
+This will set a community wallet, reward a learner, tip them, donate, and briefly pause/unpause transfers.
 
 ---
 
