@@ -109,16 +109,6 @@ contract ACMNToken is ERC20, ERC20Burnable, ERC20Permit, ERC20Pausable, ERC20Cap
         _unpause();
     }
 
-    /// @notice Freeze token transfers (same as pause) with a friendlier name for demos.
-    function freezeTransfers() external onlyRole(PAUSER_ROLE) {
-        _pause();
-    }
-
-    /// @notice Unfreeze token transfers (same as unpause) with a friendlier name for demos.
-    function unfreezeTransfers() external onlyRole(PAUSER_ROLE) {
-        _unpause();
-    }
-
     /// @notice Mint new tokens to an address. Respects the total supply `cap`.
     /// @param to Recipient address.
     /// @param amount Amount to mint (smallest units).
@@ -138,34 +128,10 @@ contract ACMNToken is ERC20, ERC20Burnable, ERC20Permit, ERC20Pausable, ERC20Cap
         }
     }
 
-    /// @notice Reward multiple learners at once (alias of airdropMint) — educational name.
-    /// @dev Gas usage grows linearly with array length. Consider keeping batches small to avoid hitting block gas limits.
-    function airdropToClass(address[] calldata recipients, uint256[] calldata amounts) external onlyRole(MINTER_ROLE) {
-        uint256 len = recipients.length;
-        if (len != amounts.length) revert LengthMismatch();
-        for (uint256 i = 0; i < len; i++) {
-            _mint(recipients[i], amounts[i]);
-        }
-    }
-
     /// @notice Reward a learner or community member with fresh tokens (mint).
     function reward(address to, uint256 amount) external onlyRole(MINTER_ROLE) {
         _mint(to, amount);
         emit LearnerRewarded(to, amount);
-    }
-
-    // ======== User Convenience Functions ========
-
-    /// @notice Transfer tokens to many recipients from the caller in one transaction.
-    /// @dev Uses standard ERC20 `transfer` under the hood. Gas usage grows linearly with array length; prefer small batches.
-    /// @param recipients Array of recipient addresses.
-    /// @param amounts Array of amounts (smallest units). Must match recipients length.
-    function airdropTransfer(address[] calldata recipients, uint256[] calldata amounts) external {
-        uint256 len = recipients.length;
-        if (len != amounts.length) revert LengthMismatch();
-        for (uint256 i = 0; i < len; i++) {
-            transfer(recipients[i], amounts[i]);
-        }
     }
 
     /// @notice Approve many spenders with the same allowance from the caller in one transaction.
@@ -177,8 +143,6 @@ contract ACMNToken is ERC20, ERC20Burnable, ERC20Permit, ERC20Pausable, ERC20Cap
             _approve(_msgSender(), spenders[i], amount);
         }
     }
-
-    /// @notice Tip someone using your existing balance.
     function tip(address to, uint256 amount) external {
         transfer(to, amount);
         emit Tipped(_msgSender(), to, amount);

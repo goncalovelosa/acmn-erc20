@@ -121,13 +121,7 @@ contract ACMNTokenUpgradeable is
         _unpause();
     }
 
-    function freezeTransfers() external onlyRole(PAUSER_ROLE) {
-        _pause();
-    }
 
-    function unfreezeTransfers() external onlyRole(PAUSER_ROLE) {
-        _unpause();
-    }
 
     function mint(address to, uint256 amount) external onlyRole(MINTER_ROLE) {
         _mint(to, amount);
@@ -148,19 +142,6 @@ contract ACMNTokenUpgradeable is
         }
     }
 
-    function airdropToClass(address[] calldata recipients, uint256[] calldata amounts) external onlyRole(MINTER_ROLE) {
-        uint256 len = recipients.length;
-        if (len != amounts.length) revert LengthMismatch();
-        // aderyn-ignore-next-line(costly-loop)
-        for (uint256 i = 0; i < len; ) {
-            address to = recipients[i];
-            uint256 amt = amounts[i];
-            if (amt != 0) {
-                _mint(to, amt);
-            }
-            unchecked { ++i; }
-        }
-    }
 
     function reward(address to, uint256 amount) external onlyRole(MINTER_ROLE) {
         _mint(to, amount);
@@ -168,20 +149,6 @@ contract ACMNTokenUpgradeable is
     }
 
     // ======== User Convenience Functions ========
-
-    function airdropTransfer(address[] calldata recipients, uint256[] calldata amounts) external {
-        uint256 len = recipients.length;
-        if (len != amounts.length) revert LengthMismatch();
-        // aderyn-ignore-next-line(costly-loop)
-        for (uint256 i = 0; i < len; ) {
-            address to = recipients[i];
-            uint256 amt = amounts[i];
-            if (amt != 0) {
-                transfer(to, amt);
-            }
-            unchecked { ++i; }
-        }
-    }
 
     function batchApprove(address[] calldata spenders, uint256 amount) external {
         uint256 len = spenders.length;
