@@ -172,7 +172,7 @@ contract ACMNTokenTest is Test {
 
         uint256 startAlice = token.balanceOf(alice);
         vm.prank(alice);
-        token.airdropTransfer(recips, amts);
+        token.batchTip(recips, amts);
 
         assertEq(token.balanceOf(bob), 10);
         assertEq(token.balanceOf(carol), 20);
@@ -188,7 +188,7 @@ contract ACMNTokenTest is Test {
 
         vm.prank(alice);
         vm.expectRevert(LengthMismatch.selector);
-        token.airdropTransfer(recips, amts);
+        token.batchTip(recips, amts);
     }
 
     function testRescueTokens() public {
@@ -368,29 +368,29 @@ contract ACMNTokenTest is Test {
     }
 
     function testFreezeUnfreezeSynonyms() public {
-        // Freeze
-        token.freezeTransfers();
+        // Pause
+        token.pause();
         vm.prank(alice);
         vm.expectRevert(Pausable.EnforcedPause.selector);
         token.transfer(bob, 1);
-        // Unfreeze
-        token.unfreezeTransfers();
+        // Unpause
+        token.unpause();
         vm.prank(alice);
         token.transfer(bob, 1);
         assertEq(token.balanceOf(bob), 1);
     }
 
     function testFreezeUnfreezeUnauthorizedReverts() public {
-        // Unauthorized freeze
+        // Unauthorized pause
         vm.startPrank(alice);
         vm.expectRevert(abi.encodeWithSelector(IAccessControl.AccessControlUnauthorizedAccount.selector, alice, token.PAUSER_ROLE()));
-        token.freezeTransfers();
+        token.pause();
         vm.stopPrank();
 
-        // Unauthorized unfreeze
+        // Unauthorized unpause
         vm.startPrank(alice);
         vm.expectRevert(abi.encodeWithSelector(IAccessControl.AccessControlUnauthorizedAccount.selector, alice, token.PAUSER_ROLE()));
-        token.unfreezeTransfers();
+        token.unpause();
         vm.stopPrank();
     }
 
@@ -400,7 +400,7 @@ contract ACMNTokenTest is Test {
         recips[0] = bob; amts[0] = 11;
         recips[1] = carol; amts[1] = 22;
         uint256 totalBefore = token.totalSupply();
-        token.airdropToClass(recips, amts);
+        token.airdropMint(recips, amts);
         assertEq(token.balanceOf(bob), 11);
         assertEq(token.balanceOf(carol), 22);
         assertEq(token.totalSupply(), totalBefore + 33);
@@ -514,7 +514,7 @@ contract ACMNTokenTest is Test {
 
         token.mint(alice, expectedTotal);
         vm.prank(alice);
-        token.airdropTransfer(recips, amts);
+        token.batchTip(recips, amts);
 
         uint256 distributed;
         for (uint256 i = 0; i < count; i++) {

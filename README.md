@@ -18,7 +18,7 @@ Contract: `src/ACMNToken.sol`
 - **Pausable**: accounts with `PAUSER_ROLE` can `pause` and `unpause` transfers (emergency stop)
 - **Capped supply**: cannot exceed `cap`
 - **AccessControl**: role-based permissions (`MINTER_ROLE`, `PAUSER_ROLE`, `DEFAULT_ADMIN_ROLE`)
-- **Examples**: `airdropTransfer` and `batchApprove` convenience methods
+- **Examples**: `batchApprove` convenience method
 - **Educational helpers**: `reward`, `airdropToClass`, `tip`, `batchTip`, `donate`, `freezeTransfers`, `unfreezeTransfers`
 
 Comprehensive tests are provided under `test/ACMNToken.t.sol` and a deployment script at `script/DeployToken.s.sol`.
